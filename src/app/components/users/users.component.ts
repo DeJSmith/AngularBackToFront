@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from '../../Models/User';
 
 @Component({
@@ -7,11 +7,21 @@ import { User } from '../../Models/User';
   styleUrls: ['./users.component.css'],
 })
 export class UsersComponent implements OnInit {
+  user: User = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    isActive: true,
+    registered: '',
+  };
   users: User[];
   showExtended: boolean = true;
   loaded: boolean = false;
-  enableAdd: boolean = true;
+  enableAdd: boolean = false;
   currentClasses = {};
+  currentStyles = {};
+  showUserForm: boolean = false;
+  @ViewChild('userForm') form: any;
 
   constructor() {}
 
@@ -20,54 +30,54 @@ export class UsersComponent implements OnInit {
       {
         firstName: 'John',
         lastName: 'Doe',
-        age: 30,
-        address: {
-          street: '50 Main st',
-          city: 'Boston',
-          state: 'MA',
-        },
-        image: 'http://lorempixel.com/600/600/people/4',
+        email: 'john@gmail.com',
         isActive: true,
+        registered: new Date('01/02/2018 08:30:00'),
+        hide: true,
       },
       {
         firstName: 'Kevin',
         lastName: 'Johnson',
-        age: 34,
-        address: {
-          street: '20 Cool st',
-          city: 'Lynn',
-          state: 'MA',
-        },
-        image: 'http://lorempixel.com/600/600/people/5',
+        email: 'kevin@yahoo.com',
         isActive: false,
+        registered: new Date('03/11/2017 06:20:00'),
+        hide: true,
       },
       {
         firstName: 'Karen',
         lastName: 'Williams',
-        age: 26,
-        address: {
-          street: '55 Mill st',
-          city: 'Miami',
-          state: 'FL',
-        },
-        image: 'http://lorempixel.com/600/600/people/6',
+        email: 'karen@gmail.com',
         isActive: true,
+        registered: new Date('11/02/2016 10:30:00'),
+        hide: true,
       },
     ];
 
     this.loaded = true;
-
-    this.setCurrentClasses();
   }
 
-  addUser(user: User): void {
-    this.users.push(user);
-  }
+  // addUser(): void {
+  //   this.user.registered = Date.now();
+  //   this.users.unshift(this.user);
+  //   this.user = {
+  //     firstName: '',
+  //     lastName: '',
+  //     email: '',
+  //     isActive: true,
+  //     registered: '',
+  //   };
+  // }
 
-  setCurrentClasses() {
-    this.currentClasses = {
-      'btn-success': this.enableAdd,
-      'big-text': this.showExtended,
-    };
+  onSubmit({ value, valid }: { value: User; valid: boolean }): void {
+    if (!valid) {
+      console.log('Form is not valid');
+    } else {
+      value.isActive = true;
+      value.registered = Date.now();
+      value.hide = true;
+      this.users.unshift(value);
+
+      this.form.reset();
+    }
   }
 }
